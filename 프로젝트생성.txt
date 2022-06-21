@@ -1,0 +1,8 @@
+1. nest cli 설치
+npm i -g @nestjs/cli
+
+2. nest 프로젝트 설치
+nest new project-name
+
+3. nest 버전 확인
+nest --version
