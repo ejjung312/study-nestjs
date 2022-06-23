@@ -12,7 +12,8 @@ npm run start:dev
 
 ========================================
 
-uuid 설치
+uuid 설치(유니크한 값을 줄 때)
+npm install uuid --save
 
 ========================================
 
@@ -60,3 +61,99 @@ Request -> Controller -> Service -> Response
 
   - 서비스 생성 명령어
     nest g service boards --no-spec
+
+- DTO (Data Transfer Object)
+  - 계층간 데이터 교환을 위한 객체
+  - DB에서 데이터를 얻어 Service나 Controller 등으로 보낼 때 사용하는 객체
+  - 데이터가 네트워크를 통해 전송되는 방법을 정의하는 객체
+  - 인터페이스나 클래스를 이용해 정의 가능. 
+  - ★★★클래스를 이용하는 것을 NestJS에서 추천함★★★
+    - 이유 : 
+      - 클래스는 ES6 표준의 일부이므로 컴파일 된 자바스크립트에서 실제 엔티티로 유지됨.
+        반면에 TypeScript 인터페이스는 트랜스 파일 중에 제거되므로 Nest는 런타임에서 참조 할 수 없음★
+        클래스는 인터페이스와 다르게 런타임에서 작동하기 때문에 파이프 같은 기능을 이용할 때 더 유용함★★
+  - 사용이유
+    - 데이터 유효성을 체크하는데 호율적
+    - 타입스크립트의 타입으로도 사용됨
+
+========================================
+
+- Pipe
+  - @Injectable() 데코레이터로 주석이 달린 클래스
+  - data transformation과 data validation을 위해 사용됨
+  - Nest는 메소드가 호출되기 직전에 파이프를 삽입하고, 파이프는 메소드로 향하는 인수를 수신하고 이에 대해 작동함
+  - 라우트 핸들러(Route Handler)가 처리하는 인수에 대해서 작동
+  - 파이프는 메소드 바로 직전에 작동해서 메소드로 향하는 인수에 대해서 변환할 것이 있으면 변환하고 유효성 체크를 위해서도 호출됨
+  - NestJS에서 기본적으로 제공하는 파이프도 존재 (ValidationPipe, ParseIntPipe, ParseBoolPipe, ParseArrayPipe, ParseUUIDPipe, DefaultValuePipe)
+
+  - Data Transformation
+    - 입력 데이터를 원하는 형식으로 변환
+
+  - Data Validation
+    - 데이터 유효성 체크
+
+  - 핸들러 레벨, 파라미터 레벨, 글로벌 레벨 세가지로 나눠짐
+
+  - 핸들러 레벨 파이프
+    - 핸들러 레벨에서 @UsePipes() 데코레이터를 이용해서 사용함
+    - 모든 파라미터에 적용됨
+
+  - 파라미터 레벨 파이프
+    - 특정한 파라미터에만 적용이 되는 파이프
+
+  - 글로벌 파이프
+    - 애플리케이션 레벨 파이프
+    - 클라이언트에서 들어오는 모든 요청에 적용됨
+    - 가장 상단 영역인 main.ts에 넣음
+
+  - 파이프에 필요한 모듈 설치
+    npm install class-validator class-transformer --save
+
+  - 커스텀 파이프 구현 방법
+    - PipeTransfrom 인터페이스 구현해야 함.
+    - transform() 메소드를 오버라이드 해야 함 -> 파라미터를 처리하기 위한 함수
+
+========================================
+
+- TypeORM
+  - node.js에서 실행되고 TypeScript로 작성된 객체 관계형 매퍼 라이브러리
+  - 모델을 기반으로 데이터베이스 테이블 체계를 자동으로 생성
+  - 데이터베이스에서 개체를 쉽게 삽입, 업데이트 및 삭제할 수 있음
+  - 테이블 간의 매핑을 만듬
+
+- ORM (Object Relational Mapping)
+  - 객체와 관계형 데이터베이스의 데이터를 자동으로 변형 및 연결하는 작업
+  - 객체와 데이터베이스의 변형에 유연하게 사용
+
+  - TypeORM 설치 명령어
+    npm install typeorm mysql2 @nestjs/typeorm --save 
+
+  - 애플리케이션에 연결
+    - src/configs/typeorm.config.ts 생성
+    - app.module.ts에 typeorm.config 추가
+
+- Entity
+  - TypeORM을 사용할때는 데이터베이스 테이블로 변환 되는 Class이기 때문에 클래스를 생성한 후 그 안에 컬럼들을 정의
+  
+  - @Entity
+    - 해당 클래스가 엔티티임을 나타냄 (CREATE TABLE board 부분)
+
+  - @PrimaryGeneratedColumn()
+    - id 열이 엔티티의 기본 키열임을 나타냄
+
+  - @Column()
+    - 테이블의 컬럼
+
+- Repository
+  - 엔티티 개체와 함께 작동하며 엔티티 찾기, 삽입, 업데이트, 삭제 등을 처리
+  - 데이터베이스 관련된 일은 서비스가 아닌 레포지토리에서 함. => 레포지토리 패턴
+
+  - 생성
+    - Repository 클래스를 상속(Extends)함. Find, Insert, Delete 등 엔티티를 컨트롤 해줌
+
+  - @EntityRepository()
+    - 클래스를 사용자 지정 저장소로 선언하는데 사용됨
+    - 사용자 지정 저장소는 일부 특정 엔티티를 관리하거나 일반 저장소 일 수 있음
+
+========================================
+
