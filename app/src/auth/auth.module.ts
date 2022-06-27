@@ -6,6 +6,9 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { User } from './user.entity';
+import * as config from 'config';
+
+const jwtConfig = config.get('jwt');
 
 @Module({
   imports: [
@@ -15,9 +18,9 @@ import { User } from './user.entity';
     }),
     // jwt 인증 부분을 담당, 그리고 주로 sign을 위한 부분
     JwtModule.register({
-      secret: '1234secret1234',
+      secret: jwtConfig.secret,
       signOptions: {
-        expiresIn: 60 * 60,
+        expiresIn: jwtConfig.expiresIn,
       },
     }),
     TypeOrmModule.forFeature([User]),
