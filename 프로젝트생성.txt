@@ -187,3 +187,11 @@ Nestjs 미들웨어
 get-user.decorator.ts
 
 ========================================
+
+윈도우에서 환경변수 사용
+npm install -g win-node-env
+
+config 모듈 설치
+1. npm install config
+2. config 폴더 생성
+3. default.yml, development.yml, production.yml 생성
